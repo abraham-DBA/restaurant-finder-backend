@@ -4,6 +4,9 @@ import { errorHandler } from "./middleware/errorMiddleware.js";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoute.js";
+import userRoutes from "./routes/userRoutes.js";
+import swaggerUi from "swagger-ui-express";
+import {specs} from "./config/swagger.js";
 
 // Load env vars
 dotenv.config();
@@ -59,13 +62,14 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // API Documentation
-
-// Home route
-app.get("/", (req, res) => {
-  res.send("Welcome to the BabyShop API Server!");
-});
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Backery API Documentation",
+}))
 
 // Health check endpoint
 app.get("/health", (req, res) => {
