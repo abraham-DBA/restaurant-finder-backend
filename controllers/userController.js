@@ -1,5 +1,13 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
+
+const assertValidUserId = (req, res) => {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+        res.status(400);
+        throw new Error("Invalid user id");
+    }
+};
 
 export const getUsers = asyncHandler(async (req, res) => {
     const users = await User.find({}).select('-password');
@@ -18,7 +26,16 @@ export const createUser = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error("User already exists");
     }
-    const user = await User.create({ name, email, password, role });
+    let user;
+    try {
+        user = await User.create({ name, email, password, role });
+    } catch (err) {
+        if (err?.code === 11000) {
+            res.status(400);
+            throw new Error("User already exists");
+        }
+        throw err;
+    }
 
     if (user) {
         res.status(201).json({
@@ -37,6 +54,7 @@ export const createUser = asyncHandler(async (req, res) => {
 });
 
 export const getUserById = asyncHandler(async (req, res) => {
+    assertValidUserId(req, res);
     const user = await User.findById(req.params.id).select('-password');
 
     if (user) {
@@ -51,6 +69,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
+    assertValidUserId(req, res);
     const user = await User.findById(req.params.id);
 
     if(!user) {
@@ -80,6 +99,7 @@ export const updateUser = asyncHandler(async (req, res) => {
 });
 
 export const deleteUser = asyncHandler(async (req, res) => {
+    assertValidUserId(req, res);
     const user = await User.findById(req.params.id);
 
     if (!user) {
