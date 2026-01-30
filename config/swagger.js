@@ -42,7 +42,6 @@ const options = {
             name: { type: "string" },
             email: { type: "string" },
             role: { type: "string", enum: ["user", "admin"] },
-            avatar: { type: "string" },
             createdAt: { type: "string", format: "date-time" },
           },
         },
