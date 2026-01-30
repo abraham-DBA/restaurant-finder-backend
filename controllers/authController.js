@@ -74,7 +74,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
             role: user.role,
         });
     } else {
-        console.error("User not found with ID:", req.user._id);
+        console.error("User not found for authenticated request");
         res.status(404);
         throw new Error("User not found");
     }

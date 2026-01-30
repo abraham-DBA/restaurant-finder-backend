@@ -65,7 +65,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 // API Documentation
-app.get("/api/docs", swaggerUi.serve, swaggerUi.setup(specs, {
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(specs, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: "Backery API Documentation",

@@ -63,8 +63,36 @@ router.post("/register", registerUser);
  */
 router.post("/login", loginUser);
 
++/**
++ * `@swagger`
++ * /api/auth/profile:
++ *   get:
++ *     summary: Get current user profile
++ *     tags: [Auth]
++ *     security:
++ *       - bearerAuth: []
++ *     responses:
++ *       200:
++ *         description: User profile
++ *       401:
++ *         description: Unauthorized
++ */
 router.get("/profile", protect, getUserProfile);
 
++/**
++ * `@swagger`
++ * /api/auth/logout:
++ *   post:
++ *     summary: লগ out the current user
++ *     tags: [Auth]
++ *     security:
++ *       - bearerAuth: []
++ *     responses:
++ *       200:
++ *         description: Logged out
++ *       401:
++ *         description: Unauthorized
++ */
 router.post("/logout", protect, logoutUser);
 
 export default router;
